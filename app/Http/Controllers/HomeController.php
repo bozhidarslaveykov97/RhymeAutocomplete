@@ -11,7 +11,7 @@ class HomeController extends Controller
     public function index()
     {
         
-        $searchWord = 'божидар';
+        $searchWord = 'Купонджия';
         
         $searchWordIndex1 = $this->getWordIndex1($searchWord);
         $searchWordIndex2 = $this->getWordIndex2($searchWord);
@@ -28,12 +28,49 @@ class HomeController extends Controller
             ->orWhere('word_index5', $searchWordIndex5)
             ->orWhere('word_index6', $searchWordIndex6)
             ->orWhere('word_index7', $searchWordIndex7)->get();
-        $searchRhymesWords = array();
+        
+        $bestRhymesWords = array();
         foreach($searchRhymes as $rhymeWord) {
-            $searchRhymesWords[] = $rhymeWord;
-        }
             
-        dd($searchRhymesWords);
+            $points = 0;
+            
+            if ($rhymeWord->word_index1 == $searchWordIndex1) {
+                $points++;
+            }
+            
+            if ($rhymeWord->word_index2 == $searchWordIndex2) {
+                $points++;
+            }
+            
+            if ($rhymeWord->word_index3 == $searchWordIndex3) {
+                $points++;
+            }
+            
+            if ($rhymeWord->word_index4 == $searchWordIndex4) {
+                $points++;
+            }
+            
+            if ($rhymeWord->word_index5 == $searchWordIndex5) {
+                $points++;
+            }
+            
+            if ($rhymeWord->word_index6 == $searchWordIndex6) {
+                $points++;
+            }
+            
+            if ($rhymeWord->word_index7 == $searchWordIndex7) {
+                $points++;
+            }
+            
+            $bestRhymesWords[] = array(
+                'points'=>$points,
+                'word'=>$rhymeWord->word
+            );
+            
+        }
+        arsort($bestRhymesWords);
+        
+        var_dump($bestRhymesWords);
         
         
         
