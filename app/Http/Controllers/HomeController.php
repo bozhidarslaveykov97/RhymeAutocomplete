@@ -16,7 +16,10 @@ class HomeController extends Controller
     
     public function search(Request $request)
     {
-        $searchWord = trim($request->input('text'));
+        $text = trim($request->input('text'));
+        $textWords = preg_split('/[\s]+/', $text, - 1, PREG_SPLIT_NO_EMPTY);
+        
+        $searchWord = end($textWords);
         
         $searchWordIndex1 = $this->getWordIndex1($searchWord);
         $searchWordIndex2 = $this->getWordIndex2($searchWord);
