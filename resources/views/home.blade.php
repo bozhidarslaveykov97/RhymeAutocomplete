@@ -6,50 +6,29 @@
   <link rel="stylesheet" href="css/style.css" />
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script type="text/javascript">
-  (function ($, undefined) {
-	  $.fn.caret = function (begin, end)
-	    {
-	        if (this.length == 0) return;
-	        if (typeof begin == 'number')
-	        {
-	            end = (typeof end == 'number') ? end : begin;
-	            return this.each(function ()
-	            {
-	                if (this.setSelectionRange)
-	                {
-	                    this.setSelectionRange(begin, end);
-	                } else if (this.createTextRange)
-	                {
-	                    var range = this.createTextRange();
-	                    range.collapse(true);
-	                    range.moveEnd('character', end);
-	                    range.moveStart('character', begin);
-	                    try { range.select(); } catch (ex) { }
-	                }
-	            });
-	        } else
-	        {
-	            if (this[0].setSelectionRange)
-	            {
-	                begin = this[0].selectionStart;
-	                end = this[0].selectionEnd;
-	            } else if (document.selection && document.selection.createRange)
-	            {
-	                var range = document.selection.createRange();
-	                begin = 0 - range.duplicate().moveStart('character', -100000);
-	                end = begin + range.text.length;
-	            }
-	            return { begin: begin, end: end };
-	        }
-	    }
-	})(jQuery);
-  
   $(function(){
 	  $("#editable").keyup(function(e){
 		if (e.keyCode == 32 || e.keyCode == 13) {
-		  console.log($(this).val());
-		  
-		  $("#dropdown-autocomplete").html($(this).val());
+		
+			$.post("search",{ _token: "{{ csrf_token() }}", text: $(this).val() }).done(function(data) {
+
+				var temp = [];
+
+				$.each(data, function(key, value) {
+				    temp.push(value);
+				});
+				
+				temp.sort(function(a, b){
+					return b.fontSize - a.fontSize;
+				});
+				
+				var html = '';
+				$.each(temp, function(key, rhymes) {
+					html += '<b style="font-size:1'+rhymes.fontSize+'px">' + rhymes.word + '</b>, ';
+			 	});
+				$("#dropdown-autocomplete").html(html);
+			});
+			
 		}
 	});
   });
@@ -79,6 +58,7 @@
 		width: 37%;
 		height:700px;
 		float:left;
+		overflow-x:scroll;
 	}
   </style>
 </head>

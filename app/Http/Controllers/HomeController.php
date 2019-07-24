@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\WordIndex;
 use App\Word;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -10,8 +11,12 @@ class HomeController extends Controller
     
     public function index()
     {
-        
-        $searchWord = 'Купонджия';
+        return view('home');    
+    }
+    
+    public function search(Request $request)
+    {
+        $searchWord = trim($request->input('text'));
         
         $searchWordIndex1 = $this->getWordIndex1($searchWord);
         $searchWordIndex2 = $this->getWordIndex2($searchWord);
@@ -51,29 +56,28 @@ class HomeController extends Controller
             }
             
             if ($rhymeWord->word_index5 == $searchWordIndex5) {
-                $points++;
+               // $points++;
             }
             
             if ($rhymeWord->word_index6 == $searchWordIndex6) {
-                $points++;
+                //$points++;
             }
             
             if ($rhymeWord->word_index7 == $searchWordIndex7) {
-                $points++;
+                //$points++;
             }
             
             $bestRhymesWords[] = array(
                 'points'=>$points,
+                'fontSize'=>$points + 2,
                 'word'=>$rhymeWord->word
             );
             
         }
+        
         arsort($bestRhymesWords);
         
-        var_dump($bestRhymesWords);
-        
-        
-        
-        // return view('home');
+       return $bestRhymesWords;
+       
     }
 }
