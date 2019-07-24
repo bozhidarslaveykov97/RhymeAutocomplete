@@ -17,7 +17,17 @@ class HomeController extends Controller
     public function search(Request $request)
     {
         $text = trim($request->input('text'));
-        $textWords = preg_split('/[\s]+/', $text, - 1, PREG_SPLIT_NO_EMPTY);
+        $textLines = preg_split("/\\r\\n|\\r|\\n/", $text);
+        
+        $lastLineKey = array_key_last($textLines);
+        
+        if (isset($textLines[$lastLineKey - 1])) {
+            $previousLine = $textLines[$lastLineKey - 1];
+        } else {
+            $previousLine = end($textLines);
+        }
+        
+        $textWords = preg_split('/[\s]+/', $previousLine, - 1, PREG_SPLIT_NO_EMPTY);
         
         $searchWord = end($textWords);
         
@@ -39,6 +49,10 @@ class HomeController extends Controller
         
         $bestRhymesWords = array();
         foreach($searchRhymes as $rhymeWord) {
+            
+            if ($rhymeWord->word == $searchWord) {
+                continue;
+            }
             
             $points = 0;
             

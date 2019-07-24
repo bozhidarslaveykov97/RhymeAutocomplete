@@ -55,7 +55,7 @@
 		border: 1px solid #94dafb;
 		padding: 4px;
 		border-radius: 4px;
-		width: 37%;
+		width: 36%;
 		height:700px;
 		float:left;
 		overflow-x:scroll;
