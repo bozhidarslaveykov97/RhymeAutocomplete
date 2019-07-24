@@ -26,6 +26,8 @@ class CreateWordsTable extends Migration
             $table->string('word_index5')->nullable();
             $table->string('word_index6')->nullable();
             $table->string('word_index7')->nullable();
+            $table->string('word_index8')->nullable();
+            $table->string('word_index9')->nullable();
             
             $table->timestamps();
             

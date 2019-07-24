@@ -27,9 +27,28 @@ class HomeController extends Controller
             $previousLine = end($textLines);
         }
         
+        $previousLine = end($textLines);
+        
         $textWords = preg_split('/[\s]+/', $previousLine, - 1, PREG_SPLIT_NO_EMPTY);
         
         $searchWord = end($textWords);
+        
+        return $this->searchWord($searchWord);
+    }
+    
+    public function test() {
+        
+        $searchWord = 'адреналинка';
+        
+        $list = $this->searchWord($searchWord);
+        
+        var_dump($list);
+    }
+    
+    public function searchWord($searchWord)
+    {
+        $searchWord = trim($searchWord);
+        $searchWord = mb_strtolower($searchWord);
         
         $searchWordIndex1 = $this->getWordIndex1($searchWord);
         $searchWordIndex2 = $this->getWordIndex2($searchWord);
@@ -38,6 +57,8 @@ class HomeController extends Controller
         $searchWordIndex5 = $this->getWordIndex5($searchWord);
         $searchWordIndex6 = $this->getWordIndex6($searchWord);
         $searchWordIndex7 = $this->getWordIndex7($searchWord);
+        $searchWordIndex8 = $this->getWordIndex8($searchWord);
+        $searchWordIndex9 = $this->getWordIndex9($searchWord);
         
         $searchRhymes = Word::where('word_index1', $searchWordIndex1)
             ->orWhere('word_index2', $searchWordIndex2)
@@ -45,7 +66,10 @@ class HomeController extends Controller
             ->orWhere('word_index4', $searchWordIndex4)
             ->orWhere('word_index5', $searchWordIndex5)
             ->orWhere('word_index6', $searchWordIndex6)
-            ->orWhere('word_index7', $searchWordIndex7)->get();
+            ->orWhere('word_index7', $searchWordIndex7)
+            ->orWhere('word_index8', $searchWordIndex8)
+            ->orWhere('word_index9', $searchWordIndex9)
+        ->get();
         
         $bestRhymesWords = array();
         foreach($searchRhymes as $rhymeWord) {
@@ -84,6 +108,27 @@ class HomeController extends Controller
                 //$points++;
             }
             
+            if ($rhymeWord->word_index8 == $searchWordIndex8) {
+                $points = $points + 2;
+            }
+            
+            if ($points > 2) {
+                
+                $checkForSmallWord = $rhymeWord->word_index2;
+                $checkForSmallWord = str_replace($rhymeWord->word_index2, false, $rhymeWord->word);
+                $checkForSmallWord = mb_strlen($checkForSmallWord);
+                
+                if ($checkForSmallWord == 2) {
+                    $points = $points + 2;
+                } else if ($checkForSmallWord == 1) {
+                    $points = $points + 3;
+                }
+            }
+            
+            if ($points == 0) {
+                continue;
+            }
+            
             $bestRhymesWords[] = array(
                 'points'=>$points,
                 'fontSize'=>$points + 2,
@@ -96,5 +141,5 @@ class HomeController extends Controller
         
        return $bestRhymesWords;
        
-    }
+    }   
 }
