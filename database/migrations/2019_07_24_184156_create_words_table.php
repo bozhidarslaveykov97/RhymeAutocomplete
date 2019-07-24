@@ -14,8 +14,11 @@ class CreateWordsTable extends Migration
     public function up()
     {
         Schema::create('words', function (Blueprint $table) {
+            
             $table->bigIncrements('id');
+            
             $table->string('word')->unique();
+            
             $table->string('word_index1')->nullable();
             $table->string('word_index2')->nullable();
             $table->string('word_index3')->nullable();
@@ -23,7 +26,13 @@ class CreateWordsTable extends Migration
             $table->string('word_index5')->nullable();
             $table->string('word_index6')->nullable();
             $table->string('word_index7')->nullable();
+            
             $table->timestamps();
+            
+            $table->index('word_index1');
+            $table->index('word_index2');
+            $table->index('word_index3');
+            
         });
     }
 
