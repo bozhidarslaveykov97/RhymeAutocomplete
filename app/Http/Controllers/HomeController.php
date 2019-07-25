@@ -97,7 +97,7 @@ class HomeController extends Controller
             }
             
             if ($rhymeWord->word_index5 == $searchWordIndex5) {
-               // $points++;
+               $points++;
             }
             
             if ($rhymeWord->word_index6 == $searchWordIndex6) {
@@ -110,6 +110,7 @@ class HomeController extends Controller
             
             if ($rhymeWord->word_index8 == $searchWordIndex8) {
                 $points = $points + 2;
+                
             }
             
             if ($points > 2) {
@@ -118,11 +119,20 @@ class HomeController extends Controller
                 $checkForSmallWord = str_replace($rhymeWord->word_index2, false, $rhymeWord->word);
                 $checkForSmallWord = mb_strlen($checkForSmallWord);
                 
-                if ($checkForSmallWord == 2) {
+                if ($checkForSmallWord == 1) {
                     $points = $points + 2;
-                } else if ($checkForSmallWord == 1) {
-                    $points = $points + 3;
                 }
+                if ($checkForSmallWord == 2) {
+                    $points = $points + 1;
+                }
+                if ($checkForSmallWord == 3) {
+                    $points++;
+                }
+            }
+            
+            // Check first letter
+            if (mb_substr($rhymeWord->word, 0, 1) == mb_substr($searchWord, 0, 1)) {
+                $points++;
             }
             
             if ($points == 0) {
@@ -131,7 +141,7 @@ class HomeController extends Controller
             
             $bestRhymesWords[] = array(
                 'points'=>$points,
-                'fontSize'=>$points + 2,
+                'fontSize'=>$points + 1,
                 'word'=>$rhymeWord->word
             );
             
